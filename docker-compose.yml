@@ -1,0 +1,29 @@
+version: "3.3"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.9.28-management
+    container_name: some-rabbit
+    privileged: true
+    hostname: rabbitserver
+    user: root
+    labels:
+      com.example.description: "RabbitMQ-Server by Me"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data/var/lib/rabbitmq/
+      - rabbitmq-log:/var/log/rabbitmq
+    networks:
+      - rabbitmq-net
+
+volumes:
+  rabbitmq-data:
+    external: true
+  rabbitmq-log:
+    external: true
+
+networks:
+  rabbitmq-net:
+    driver: bridge
