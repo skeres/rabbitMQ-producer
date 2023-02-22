@@ -106,3 +106,7 @@ Example of message generated : StringMessage01(message=myExampleOfMessage)
 To produce an Object message :   
 use your web browser at http://localhost:9001/publish  
 Example of message generated : ObjectMessage01(messageId=add73a8d-2cc9-49fa-956d-cb345da9e6dc, message=hello, messageDate=Wed Feb 22 22:35:04 CET 2023)  
+
+
+## Consuming messages
+Go to https://github.com/skeres/rabbitMQ-consumer to pull and run Spring boot application.  
