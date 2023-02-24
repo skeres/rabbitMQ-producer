@@ -1,0 +1,63 @@
+                                    RabbitMQ in short
+
+
+Resources :
+
+
+
+
+C'est un message broker (bus/agent de messages), très simple à mettre en place.
+Multiplateforme et multiprotocole (AMQP, MQTT, STOMP).
+Adapté pour monter rapidement une architecture microservice ou IoT.
+
+RabbitMQ est basé sur l’idée du Advanced Message Queuing Protocol (AMQP). Le principal avantage du AMQP est qu’il
+n’impose pas à l’émetteur et au destinataire de comprendre le même langage de programmation.
+Il est asynchrone
+
+AMQPS / WebMQTTS :  déclinaison non-sécurisée/sécurisée (chiffrée) de chacun de ces protocoles.
+Par défaut dans RabbitMQ, les échanges ne sont pas chiffrés.
+
+Si une partie des flux transite par Internet, et l’autre transite à l’intérieur du réseau, l’ajout du chiffrement est obligatoire.
+ Le risque d’espionnage, de détournement d’information, de Man in the Middle, sont suffisamment sérieux pour
+qu’on prenne le temps de configurer un chiffrement TLS.
+
+source Clustering : https://blog.zwindler.fr/2019/04/16/suivez-le-lapin-orange-intro-et-bonnes-pratiques-dinfra-rabbitmq/
+Clustering : RabbitMQ propose nativement un mécanisme de clustering. Et comme dans tout cluster disposant d’un mécanisme de vote/d’élection, il est
+fortement conseillé d’avoir un nombre impair de nodes pour résoudre les cas de split brain.
+
+Fonctionnement :
+Il existe quatre étapes dans la transmission des messages :
+
+    Producer : génère le message
+    Exchange : transmet le message
+    Queue : stocke le message
+    Consumer : traite le message
+
+Le « Producer » publie un message, mais au lieu de le transmettre directement au « Consumer », il l’envoie à l’« Exchange ». Cette étape est
+ responsable de la distribution des messages aux différentes files d’attente, qui les transmettent ensuite au Consumer. Les étapes
+ « Exchange » et « Queue » font partie de RabbitMQ et sont gérées par le logiciel. Pour que les messages parviennent aux bons destinataires, on
+ utilise des « Routing Keys ». L’émetteur alloue au message une Routing Key qui fonctionne comme une adresse. À l’aide de cette
+clé, l’Exchange identifie la façon dont le message doit être adressé.
+
+Un « Binding » a lieu entre l’Exchange et la file d’attente. Celui-ci assure la connexion entre chaque file d’attente individuelle et l’Exchange.
+Le Binding définit par ailleurs selon quels critères un message doit être transmis. Les messages peuvent être distribués selon quatre types de base.
+
+Direct Exchange
+Un Direct Exchange est une connexion directe entre l’émetteur et le destinataire. Le Producer alloue au message une Routing Key qui correspond à
+la Binding Key de la Queue. Par conséquent, une seule Queue est possible et un seul Consumer est généralement rattaché à cette dernière.
+
+Topic Exchange
+Ce type d’Exchange élargit le concept de Direct Exchange. Plutôt que d’avoir recours à un seul critère (Routing Key = Binding Key), plusieurs
+Queues peuvent être atteintes. Il fonctionne à l’aide de balises et permet d’accepter certaines Queues ou Binding Keys tout en maintenant l’exclusion des autres Queues.
+
+Fanout Exchange
+Le Fanout Exchange est une diffusion permettant de distribuer un message à toutes les Queues disponibles. Aucun tri n’est effectué. Les Routing Keys sont ignorées.
+
+Header Exchange
+Le système ignore également les Routing Keys en cas de Header Exchanges. Pour ce type d’Exchange, c’est l’en-tête du message qui joue un
+rôle essentiel. L’Exchange y trouvera les attributs qui lui permettront d’accéder aux bonnes Queues. En ce sens, l’Header Exchange fonctionne de
+façon similaire au Topic Exchange, puisqu’il existe également plusieurs Queues, mais elles ne peuvent pas être toutes adressées.
+
+Les Consumers, autrement dit les logiciels destinataires, s’inscrivent à certaines Queues qui leur transmettent les messages. Par conséquent, un
+ seul Consumer est également prévu par Queue. Si plusieurs Consumers retirent des messages d’une file d’attente, il est impossible de garantir une
+ distribution correcte. Il est également possible, mais pas impératif, d’imposer ou pas au destinataire l’envoi d’un accusé de réception pour chaque message.

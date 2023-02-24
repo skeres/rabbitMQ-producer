@@ -97,6 +97,16 @@ docker-compose down
 use your web browser at http://localhost:15672  
 default credentials to use : guest / guest  
 
+Screenshot of the dashboard management :  
+
+![RabbitMQ-dashboard.png](RabbitMQ-dashboard.png "RabbitMQ-dashboard")
+
+
+## RabbitMQ exchange types
+Excerpt from https://blog.devgenius.io/part-4-how-to-configure-messaging-with-rabbitmq-in-a-spring-boot-application-a73e2453da95
+
+![RabbitMQ-exchange-types.png ](RabbitMQ-exchange-types.png "RabbitMQ-exchange-types")
+
 
 ## Producing messages
 To produce a simple String message :   
